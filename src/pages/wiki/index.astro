@@ -1,0 +1,23 @@
+---
+import Base from '../../layouts/Base.astro';
+import EntryCard from '../../components/EntryCard.astro';
+import { categories, publishedEntries } from '../../lib/wiki';
+const entries = await publishedEntries();
+const series = [...new Set(entries.map(entry => entry.data.series))].sort();
+---
+<Base title="资料文章">
+  <section class="page-heading"><h1>资料文章</h1><p>这里保留阅读指南及人物、术语等辅助资料。系列作品和衍生汇总请前往 <a href="/works/">作品导航</a> 和 <a href="/side-content/">衍生目录</a>。搜索只匹配标题、简介和标签，不检索正文。</p></section>
+  <div class="filters" id="filters" hidden>
+    <label class="search-label">搜索条目<input id="search" type="search" placeholder="输入人物、作品或术语…" autocomplete="off" /></label>
+    <label>分类<select id="category"><option value="">全部分类</option>{categories.map(category => <option>{category}</option>)}</select></label>
+    <label>作品<select id="series"><option value="">全部作品</option>{series.map(name => <option>{name}</option>)}</select></label>
+  </div>
+  <noscript><p class="notice">当前未启用 JavaScript，下方仍可浏览全部已公开条目；搜索及筛选需要 JavaScript。</p></noscript>
+  <p id="results-count" class="muted" aria-live="polite">共 {entries.length} 个条目</p>
+  <div class="entry-grid" id="entries">{entries.map(entry => <div data-entry data-kind={entry.data.category} data-series-list={JSON.stringify([entry.data.series])} data-search={[entry.data.title, entry.data.description, entry.data.series, ...entry.data.tags].join(' ').toLocaleLowerCase('zh-CN')}><EntryCard entry={entry} /></div>)}</div>
+  <p id="empty-state" class="notice" hidden>没有匹配的条目。请调整关键词或筛选条件；该作品的内容可能尚未编写。</p>
+  <script>
+    import { initEntryFilters } from '../../scripts/filters';
+    initEntryFilters('category');
+  </script>
+</Base>

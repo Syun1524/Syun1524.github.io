@@ -1,0 +1,11 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { entryUrl } from '../lib/wiki';
+interface Props { entry: CollectionEntry<'wiki'> }
+const { entry } = Astro.props;
+---
+<article class="entry-card">
+  <h3><a href={entryUrl(entry.id)}>{entry.data.title}</a><span class:list={{ 'spoiler-label': entry.data.spoiler }}>{entry.data.spoiler ? '含剧透' : '无剧透'}</span></h3>
+  <p>{entry.data.description}</p>
+  <div class="entry-meta"><span>{entry.data.category}</span> · <span>{entry.data.series}</span> · <time datetime={entry.data.updated}>{entry.data.updated}</time></div>
+</article>

@@ -1,0 +1,20 @@
+---
+import Base from '../layouts/Base.astro';
+import { publishedWorks, workUrl } from '../lib/works';
+import { publishedSideContent, sideContentTypes, sideContentUrl } from '../lib/catalog';
+const works = await publishedWorks();
+const entries = await publishedSideContent();
+---
+<Base title="首页">
+  <header class="page-heading"><h1>首页</h1><p class="page-origin">来自科学ADV中文资料站</p><p>系列作品简介、游戏获取渠道，以及剧情、资料与音乐衍生内容汇总。</p><p><a href="/works/">作品导航</a> · <a href="/side-content/">衍生内容目录</a> · <a href="/wiki/reading-guide/">阅读指南</a></p></header>
+  <section class="portal" aria-labelledby="portal-title">
+    <div class="portal-heading"><h2 id="portal-title">科学<span>ADV</span></h2><p>系列作品</p></div>
+    <div class="works-grid">{works.map(work => <figure class="work-item"><a class="work-cover" href={workUrl(work.id)} aria-label={`查看${work.data.title}简介与获取方式`}>{work.data.cover ? <img src={work.data.cover} alt={`${work.data.title}封面`} width="240" height="320" loading="lazy" /> : <span class="cover-placeholder"><span class="cover-series">SCIENCE ADVENTURE</span><strong>{work.data.name}</strong><span class="cover-title">{work.data.title}</span><small>封面待补充</small></span>}</a><figcaption><a href={workUrl(work.id)}>{work.data.title}</a><small><a href={`/side-content/?series=${encodeURIComponent(work.data.name)}`}>衍生内容</a></small></figcaption></figure>)}</div>
+    <p class="cover-note">点击作品查看简介、版本与获取渠道；“衍生内容”进入该作品的目录。尚未填写的栏目显示待补充；作品导航不代表完整发行清单。</p>
+  </section>
+  <div class="home-sections">
+    <section class="wiki-section" aria-labelledby="categories-title"><h2 id="categories-title">衍生内容分类</h2><ul class="category-links">{sideContentTypes.map(type => <li><a href={`/side-content/?type=${encodeURIComponent(type)}`}>{type}</a><span>（{entries.filter(entry => entry.data.type === type).length}）</span></li>)}</ul><p><a href="/side-content/">全部衍生内容</a> · <a href="/contribute/">录入指南</a></p></section>
+    <section id="recent" class="wiki-section" aria-labelledby="recent-title"><h2 id="recent-title">衍生目录最近更新</h2>{entries.length ? <ul class="recent-list">{entries.slice(0, 8).map(entry => <li><time datetime={entry.data.updated}>{entry.data.updated}</time><a href={sideContentUrl(entry.id)}>{entry.data.title}</a><span class="muted">{entry.data.type}{entry.data.spoiler ? ' · 含剧透' : ''}</span></li>)}</ul> : <p class="notice">尚未录入真实衍生内容。可以按照 <a href="/contribute/">录入指南</a> 开始整理。</p>}<p class="muted">此处按记录的更新日期排序，不是在线编辑日志。</p></section>
+    <section id="about" class="wiki-section" aria-labelledby="about-title"><h2 id="about-title">关于本站</h2><p>本站以作品导航和衍生内容汇总为重点，目前已准备 {works.length} 个作品栏目，公开衍生记录为 {entries.length} 项。小说、广播剧、漫画、动画、资料书、访谈和音乐等内容均可录入，暂不整理手办等实体商品。</p><p>人物、术语等介绍是辅助资料，既有示例保留在 <a href="/wiki/">资料文章</a> 中；不以重建通用角色百科为目标。</p><p>这是一个独立的新站，不是旧科学ADV中文 wiki 的恢复站。内容以 Markdown 编写，简介自行撰写，外部资料注明来源；第三方文字、图片与译本需核对授权后使用。</p></section>
+  </div>
+</Base>

@@ -1,0 +1,25 @@
+---
+import { render, type CollectionEntry } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { publishedEntries } from '../../lib/wiki';
+export async function getStaticPaths() {
+  return (await publishedEntries()).map(entry => ({ params: { id: entry.id }, props: { entry } }));
+}
+interface Props { entry: CollectionEntry<'wiki'> }
+const { entry } = Astro.props;
+const { Content, headings } = await render(entry);
+---
+<Base title={entry.data.title} description={entry.data.description}>
+  <div class="breadcrumb"><a href="/wiki/">资料文章</a><span>/</span><span>{entry.data.category}</span></div>
+  <header class="article-heading"><h1>{entry.data.title}</h1><p class="page-origin">来自科学ADV中文资料站 · {entry.data.category} · {entry.data.series}</p><p>{entry.data.description}</p><div class="article-meta"><time datetime={entry.data.updated}>更新于 {entry.data.updated}</time><span>{entry.data.spoiler ? '含剧透' : '无剧透'}</span>{entry.data.tags.map(tag => <span class="tag">{tag}</span>)}</div></header>
+  <div class="article-layout">
+    <article class="prose">
+      {entry.data.spoiler ? <details class="spoiler-gate"><summary>剧透提醒：涉及 {entry.data.series}，点击后展开正文</summary><div class="spoiler-body"><Content /></div></details> : <Content />}
+    </article>
+    <aside class="article-aside">
+      <h2>本页目录</h2>
+      {entry.data.spoiler ? <p class="muted">为避免标题泄露剧情，含剧透条目不展示目录。</p> : <nav aria-label="本页目录">{headings.filter(heading => heading.depth === 2 || heading.depth === 3).map(heading => <a class:list={{ 'sub-heading': heading.depth === 3 }} href={`#${heading.slug}`}>{heading.text}</a>)}</nav>}
+      <div class="aside-note"><strong>编辑帮助</strong><p>补充内容或来源，请参阅 <a href="/contribute/">编写指南</a>。</p></div>
+    </aside>
+  </div>
+</Base>

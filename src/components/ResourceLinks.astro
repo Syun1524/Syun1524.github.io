@@ -1,0 +1,6 @@
+---
+import type { CollectionEntry } from 'astro:content';
+interface Props { links: CollectionEntry<'works'>['data']['links']; emptyText: string }
+const { links, emptyText } = Astro.props;
+---
+{links.length ? <ul class="resource-links">{links.map(link => <li><span class="tag">{link.kind}</span> <a href={link.url}>{link.label}</a>{link.note && <span class="muted"> — {link.note}</span>}</li>)}</ul> : <p class="notice">{emptyText}</p>}

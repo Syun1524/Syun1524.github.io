@@ -1,0 +1,20 @@
+---
+import Base from '../../layouts/Base.astro';
+import { publishedWorks } from '../../lib/works';
+import { publishedSideContent, sideContentTypes, sideContentUrl } from '../../lib/catalog';
+const entries = await publishedSideContent();
+const works = await publishedWorks();
+const series = [...new Set([...works.map(work => work.data.name), ...entries.flatMap(entry => entry.data.series)])];
+---
+<Base title="衍生内容目录">
+  <header class="page-heading"><h1>衍生内容目录</h1><p>汇总系列的剧情、资料与音乐衍生作品。每项记录名称、类型、发行日期、阅读前置条件、中文情况和来源/获取渠道。暂不收录手办等实体商品。</p>{!entries.length && <p class="muted">目录结构已准备好，真实内容尚未录入。</p>}<p class="muted">搜索不检索正文或阅读前置条件，以减少剧透。</p></header>
+  <div id="filters" class="filters" hidden><label class="search-label">搜索衍生内容<input id="search" type="search" placeholder="输入名称、原文名称或标签" autocomplete="off" /></label><label>类型<select id="type"><option value="">全部类型</option>{sideContentTypes.map(type => <option>{type}</option>)}</select></label><label>作品<select id="series"><option value="">全部作品</option>{series.map(name => <option>{name}</option>)}</select></label></div>
+  <noscript><p class="notice">下方仍可浏览所有公开记录；搜索及筛选需要 JavaScript。</p></noscript>
+  <p id="results-count" class="muted" aria-live="polite">共 {entries.length} 个条目</p>
+  <div class="entry-grid">{entries.map(entry => <article class="entry-card" data-entry data-kind={entry.data.type} data-series-list={JSON.stringify(entry.data.series)} data-search={[entry.data.title, entry.data.originalTitle ?? '', entry.data.description, ...entry.data.series, ...entry.data.tags].join(' ').toLocaleLowerCase('zh-CN')}><h3><a href={sideContentUrl(entry.id)}>{entry.data.title}</a>{entry.data.spoiler && <span class="spoiler-label">正文含剧透</span>}</h3>{entry.data.originalTitle && <p class="muted">{entry.data.originalTitle}</p>}<p>{entry.data.description}</p><div class="entry-meta">{entry.data.type} · {entry.data.series.join(' / ')} · {entry.data.released ?? '发行日期待核实'} · {entry.data.chineseStatus}</div><p class="muted">前置条件：{entry.data.prerequisites.length ? entry.data.prerequisites.join('；') : '待补充（不代表没有前置要求）'}</p></article>)}</div>
+  <p id="empty-state" class="notice" hidden>没有匹配的记录，或内容尚未录入。可调整筛选条件，或参阅 <a href="/contribute/">录入指南</a> 添加第一项内容。</p>
+  <script>
+    import { initEntryFilters } from '../../scripts/filters';
+    initEntryFilters('type');
+  </script>
+</Base>

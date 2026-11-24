@@ -1,0 +1,19 @@
+---
+import { render, type CollectionEntry } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import ResourceLinks from '../../components/ResourceLinks.astro';
+import { publishedSideContent, sideContentSeriesUrl } from '../../lib/catalog';
+export async function getStaticPaths() {
+  return (await publishedSideContent()).map(entry => ({ params: { id: entry.id }, props: { entry } }));
+}
+interface Props { entry: CollectionEntry<'sideContent'> }
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+---
+<Base title={entry.data.title} description={entry.data.description}>
+  <div class="breadcrumb"><a href="/side-content/">衍生目录</a><span>/</span><span>{entry.data.type}</span></div>
+  <header class="article-heading"><h1>{entry.data.title}</h1><p class="page-origin">来自科学ADV中文资料站 · 更新于 {entry.data.updated}</p><p>{entry.data.description}</p></header>
+  <dl class="catalog-meta"><dt>原文名称</dt><dd>{entry.data.originalTitle ?? '待补充'}</dd><dt>所属作品</dt><dd>{entry.data.series.map((name, index) => <>{index > 0 && ' / '}<a href={sideContentSeriesUrl(name)}>{name}</a></>)}</dd><dt>类型</dt><dd>{entry.data.type}</dd><dt>发行日期</dt><dd>{entry.data.released ?? '待核实'}</dd><dt>中文情况</dt><dd>{entry.data.chineseStatus}</dd><dt>阅读前置条件</dt><dd>{entry.data.prerequisites.length ? <ul>{entry.data.prerequisites.map(item => <li>{item}</li>)}</ul> : '待补充（不代表没有前置要求）'}</dd></dl>
+  <section class="wiki-section"><h2>资料来源与获取渠道</h2><ResourceLinks links={entry.data.links} emptyText="暂未录入经核实的来源或获取渠道。" /><p class="muted">“有民间译本”仅描述语言情况，不代表译本获授权或可转载。请核对来源、适用版本和使用条件。</p></section>
+  <article class="prose">{entry.data.spoiler ? <details class="spoiler-gate"><summary>剧透提醒：点击展开正文</summary><div class="spoiler-body"><Content /></div></details> : <Content />}</article>
+</Base>
