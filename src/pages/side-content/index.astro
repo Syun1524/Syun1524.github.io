@@ -1,20 +1,21 @@
 ---
 import Base from '../../layouts/Base.astro';
-import { publishedWorks } from '../../lib/works';
-import { publishedSideContent, sideContentTypes, sideContentUrl } from '../../lib/catalog';
+import EntryCover from '../../components/EntryCover.astro';
+import { mainWorks } from '../../lib/works';
+import { publishedSideContent, resourceStatuses, sideContentTypes, sideContentUrl } from '../../lib/catalog';
 const entries = await publishedSideContent();
-const works = await publishedWorks();
+const works = await mainWorks();
 const series = [...new Set([...works.map(work => work.data.name), ...entries.flatMap(entry => entry.data.series)])];
 ---
 <Base title="衍生内容目录">
-  <header class="page-heading"><h1>衍生内容目录</h1><p>汇总系列的剧情、资料与音乐衍生作品。每项记录名称、类型、发行日期、阅读前置条件、中文情况和来源/获取渠道。暂不收录手办等实体商品。</p>{!entries.length && <p class="muted">目录结构已准备好，真实内容尚未录入。</p>}<p class="muted">搜索不检索正文或阅读前置条件，以减少剧透。</p></header>
-  <div id="filters" class="filters" hidden><label class="search-label">搜索衍生内容<input id="search" type="search" placeholder="输入名称、原文名称或标签" autocomplete="off" /></label><label>类型<select id="type"><option value="">全部类型</option>{sideContentTypes.map(type => <option>{type}</option>)}</select></label><label>作品<select id="series"><option value="">全部作品</option>{series.map(name => <option>{name}</option>)}</select></label></div>
+  <header class="page-heading"><h1>衍生内容目录</h1><p>汇总广播剧、小说、漫画、动画、舞台剧与公式书。主游戏与衍生游戏见 <a href="/games/">游戏发行列表</a>。每项记录名称、类型、作者或脚本家、发行日期、阅读前置条件、中文情况和网络资源。</p><p class="muted">搜索范围：名称、原文名称、简介、作者、脚本家、所属作品及标签。</p></header>
+  <div id="filters" class="filters" hidden><label class="search-label">搜索衍生内容<input id="search" type="search" placeholder="输入名称、作者、脚本家或标签" autocomplete="off" /></label><label>类型<select id="type"><option value="">全部类型</option>{sideContentTypes.map(type => <option>{type}</option>)}</select></label><label>作品<select id="series"><option value="">全部作品</option>{series.map(name => <option>{name}</option>)}</select></label><label>资源情况<select id="resourceStatus"><option value="">全部资源情况</option>{resourceStatuses.map(status => <option>{status}</option>)}</select></label></div>
   <noscript><p class="notice">下方仍可浏览所有公开记录；搜索及筛选需要 JavaScript。</p></noscript>
   <p id="results-count" class="muted" aria-live="polite">共 {entries.length} 个条目</p>
-  <div class="entry-grid">{entries.map(entry => <article class="entry-card" data-entry data-kind={entry.data.type} data-series-list={JSON.stringify(entry.data.series)} data-search={[entry.data.title, entry.data.originalTitle ?? '', entry.data.description, ...entry.data.series, ...entry.data.tags].join(' ').toLocaleLowerCase('zh-CN')}><h3><a href={sideContentUrl(entry.id)}>{entry.data.title}</a>{entry.data.spoiler && <span class="spoiler-label">正文含剧透</span>}</h3>{entry.data.originalTitle && <p class="muted">{entry.data.originalTitle}</p>}<p>{entry.data.description}</p><div class="entry-meta">{entry.data.type} · {entry.data.series.join(' / ')} · {entry.data.released ?? '发行日期待核实'} · {entry.data.chineseStatus}</div><p class="muted">前置条件：{entry.data.prerequisites.length ? entry.data.prerequisites.join('；') : '待补充（不代表没有前置要求）'}</p></article>)}</div>
-  <p id="empty-state" class="notice" hidden>没有匹配的记录，或内容尚未录入。可调整筛选条件，或参阅 <a href="/contribute/">录入指南</a> 添加第一项内容。</p>
+  <div class="entry-grid">{entries.map(entry => <article class="entry-card entry-with-cover" data-entry data-kind={entry.data.type} data-resource-status={entry.data.resourceStatus} data-series-list={JSON.stringify(entry.data.series)} data-search={[entry.data.title, entry.data.originalTitle ?? '', entry.data.description, ...[...entry.data.authors, ...entry.data.scriptwriters].flatMap(name => [name, name.replace(/\s/g, '')]), ...entry.data.series, ...entry.data.tags].join(' ').toLocaleLowerCase('zh-CN')}><EntryCover cover={entry.data.cover} title={entry.data.title} /><div class="entry-content"><h3 class="entry-title"><span class="entry-type">{entry.data.type}</span><a href={sideContentUrl(entry.id)}>{entry.data.title}</a>{entry.data.spoiler && <span class="spoiler-label">正文含剧透</span>}</h3>{entry.data.resourceStatus && <p>资源情况：<span class="tag">{entry.data.resourceStatus}</span></p>}{entry.data.originalTitle && <p class="muted">{entry.data.originalTitle}</p>}{entry.data.authors.length > 0 && <p class="muted">作者：{entry.data.authors.join('、')}</p>}{entry.data.scriptwriters.length > 0 && <p class="muted">脚本家：{entry.data.scriptwriters.join('、')}</p>}<p>{entry.data.description}</p><div class="entry-meta">{entry.data.series.join(' / ')}{entry.data.released && <> · {entry.data.released}</>}{entry.data.chineseStatus !== '待核实' && <> · {entry.data.chineseStatus}</>}</div><p class="muted">前置条件：{entry.data.prerequisites.length ? entry.data.prerequisites.join('；') : '待补充'}</p></div></article>)}</div>
+  <p id="empty-state" class="notice" hidden>没有匹配的记录。可调整筛选条件，或参阅 <a href="/contribute/">录入指南</a> 添加内容。</p>
   <script>
     import { initEntryFilters } from '../../scripts/filters';
-    initEntryFilters('type');
+    initEntryFilters('type', true);
   </script>
 </Base>

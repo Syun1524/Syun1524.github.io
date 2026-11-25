@@ -2,40 +2,48 @@
 import Base from '../layouts/Base.astro';
 ---
 <Base title="编写指南">
-  <section class="page-heading"><h1>编写指南</h1><p>复制 Markdown 模板，填入内容，网站会自动生成页面和索引。不需要为每篇文章编写网页代码。</p></section>
+  <section class="page-heading"><h1>编写指南</h1><p>复制 Markdown 模板，填入内容，网站会自动生成页面和索引。</p></section>
   <article class="prose guide">
     <h2>先选择录入内容</h2>
     <ul><li><strong>作品简介与获取方式：</strong>编辑 <code>src/content/works/</code> 中对应作品的 Markdown 文件。新增作品时，把 <code>templates/work.md</code> 复制到该文件夹。</li><li><strong>衍生内容：</strong>把 <code>templates/side-content.md</code> 复制到 <code>src/content/side-content/</code>，一项发行作品一个文件，例如 <code>my-drama-cd.md</code>。</li><li><strong>辅助资料文章：</strong>继续使用 <code>templates/article.md</code> 和 <code>src/content/wiki/</code>，现有文章网址不变。</li></ul>
     <h2>作品页面怎么填</h2>
-    <p><code>name</code> 为作品统一名称（例如 <code>CHAOS;HEAD</code>），<code>title</code> 为中文名称，<code>description</code> 是不含剧透的简述。<code>order</code> 控制导航排序，不代表推荐阅读顺序。<code>platforms</code>、<code>languages</code> 为已核实的平台、语言列表；未知时保持 <code>[]</code>，网页会显示待补充。正文用于简介、版本区分与阅读建议。</p>
-    <p>如有权使用封面，将文件放到 <code>public/images/</code>，再在作品顶部增加 <code>cover: "/images/chaos-head.jpg"</code>。作品页设为 <code>draft: false</code> 后，首页、侧栏和作品导航自动同步。</p>
+    <p><code>name</code> 为作品统一名称（例如 <code>CHAOS;HEAD</code>），<code>title</code> 为中文名称，<code>description</code> 是无剧透的简述。<code>order</code> 控制导航排序。<code>platforms</code>、<code>languages</code> 为已核实的平台、语言列表；未知时保持 <code>[]</code>，网页会显示待补充。正文用于简介、版本区分与阅读建议。</p>
+    <p>如有权使用封面，将文件放到 <code>public/images/</code>，再在作品顶部增加 <code>cover: "/images/chaos-head.jpg"</code>。只有不填 <code>parent</code> 的公开主作品进入首页、侧栏和作品导航。衍生游戏介绍页填写所属主作品的文件 ID，例如 <code>parent: steins-gate</code>；原有 STEINS;GATE 0 和 DaSH 页面仍可访问。</p>
+    <h2>游戏发行列表怎么填</h2>
+    <p>编辑 <code>src/content/games.json</code>，一项游戏或加强版一个记录：<code>id</code> 为唯一英文 ID，<code>name</code> 为名称，<code>series</code> 为所属主作品的文件 ID（如 <code>steins-gate</code>），<code>kind</code> 仅为“主游戏”或“其他”；衍生游戏、加强版和重制版统一归入“其他”。</p>
+    <p><code>released</code> 填查证过的最初发售日期（YYYY-MM-DD）；<code>source</code> 填查证来源，<code>draft: true</code> 可隐藏记录。网站自动按日期从早到晚排列，同日按名称排序。每个游戏标题链接自己的作品页面：新增游戏时，在 <code>src/content/works/</code> 创建与游戏 ID 同名的 Markdown 文件，设为 <code>draft: false</code>；非主作品填写 <code>parent</code>。缺少对应的公开页面会报错。简介、平台、语言和网络资源在该 Markdown 中填写。</p>
     <h2>衍生内容怎么填</h2>
     <p><code>series</code> 是所属作品列表，名称与作品页的 <code>name</code> 完全一致。跨作品内容可填写 <code>["CHAOS;HEAD", "STEINS;GATE"]</code>，一项记录会同时出现在两个作品的衍生目录中，不必重复建文件。</p>
-    <p><code>type</code> 选择广播剧、小说、短篇、漫画、动画、舞台剧、设定集、访谈、资料书、原声带、歌曲、广播节目或其他。<code>originalTitle</code> 填原文名称；日期已核实时增加 <code>released: "2010-08-13"</code>，也可只写年份或年月。不详时省略，不要推测。</p>
-    <p><code>prerequisites</code> 记录阅读前置条件；留空会显示“待补充”，不是“无前置要求”。<code>chineseStatus</code> 只能为待核实、官方中文、有民间译本或暂无已知中文，并在正文列出核实依据。<code>tags</code> 可填写无剧透的检索关键词。</p>
-    <p><code>spoiler: true</code> 会折叠衍生记录的正文，但名称、简介、前置条件与链接仍公开，不能在这些字段中写剧情揭秘。所有新模板默认 <code>draft: true</code>，检查后改为 <code>false</code> 才会进入目录、作品页和最近更新。</p>
-    <h2>添加来源与获取链接</h2>
-    <p>作品与衍生内容都使用 <code>links</code>。先保留空列表；核实链接后改为以下结构（示例地址不是实际资源，需替换）：</p>
+    <p><code>type</code> 只选择广播剧、小说、漫画、动画、舞台剧或公式书。沿用 N.R.W. 的归类方式，短篇、特典文章、角色博客、试读内容及台本统一放入“小说”，具体形式在正文或标签说明。<code>originalTitle</code> 填原文名称；日期已核实时增加 <code>released: "2010-08-13"</code>，也可只写年份或年月。日期不详时省略，页面会隐藏该字段。</p>
+    <p>小说和漫画的作者填写 <code>authors</code> 姓名列表，例如 <code>["林直孝"]</code>；广播剧的脚本家填写 <code>scriptwriters</code> 列表。按原资料的作者、脚本家署名填写，不详时保持 <code>[]</code>，详情会显示“待补充”。目录中的类别显示在标题前，搜索也支持作者与脚本家姓名。</p>
+    <p>已录入 N.R.W. 保存页面中的 253 项记录，暂用日文名称，介绍待补充。补充译名只需修改 <code>title</code>，保留 <code>originalTitle</code> 中的日文原名；介绍填写 <code>description</code> 和正文的“内容介绍”。保留文件名以维持原网址。卷数和版本分开建项，同一发行记录的收录名称列于正文。</p>
+    <p><code>prerequisites</code> 记录阅读前置条件；留空会显示“待补充”。<code>chineseStatus</code> 可填官方中文、有民间译本或暂无已知中文，并在 <code>sources</code> 记录核实依据；省略或尚未确认时，页面隐藏中文情况。<code>tags</code> 可填写无剧透的检索关键词。</p>
+    <p><code>spoiler: true</code> 会折叠衍生记录的正文；名称、简介、前置条件与链接始终公开，应保持无剧透。所有新模板默认 <code>draft: true</code>，检查后改为 <code>false</code> 才会进入目录、作品页和最近更新。</p>
+    <h2>添加网络资源</h2>
+    <p>衍生条目和游戏发行记录的 <code>resourceStatus</code> 为“资源情况”，可填“有汉化”“有原版”或“暂无资源”；尚未整理时保持 <code>""</code>。两个目录都支持与关键词、作品和类型组合筛选，已填写的状态会显示在条目中。</p>
+    <p>封面字段 <code>cover</code> 初始为 <code>""</code>，页面保留空白封面位置。有权使用的图片放到 <code>public/images/</code>，再填写 <code>cover: "/images/example.jpg"</code>；游戏 JSON 中填写 <code>"cover": "/images/example.jpg"</code>。衍生条目的列表和详情、游戏发行列表均会显示封面。</p>
+    <p>作品与衍生内容都使用 <code>links</code>。先保留空列表；核实链接后改为以下结构，将示例地址替换为实际资源：</p>
     <pre><code>{`links:
   - label: "官网作品信息"
     url: "https://example.com/official-product"
     kind: "官方信息"
     note: "在这里注明平台、语言、版本或访问限制"`}</code></pre>
-    <p><code>kind</code> 可选官方信息、购买、补丁、攻略、授权阅读/收听、译者发布或其他。网址只允许 <code>http</code> 和 <code>https</code>。获取方式以正规商店、官方发布及获授权渠道为主；翻译存在不等于获授权，不应直接搬运参考站的 PDF、扫描、视频或网盘链接。</p>
+    <p><code>kind</code> 可选官方信息、购买、补丁、攻略、授权阅读/收听、译者发布或其他。网址只允许 <code>http</code> 和 <code>https</code>。网络资源以正规商店、官方发布及获授权渠道为主；录入译本及其他第三方资源时核对发布授权和使用条件。</p>
+    <p>衍生条目的事实来源填写 <code>sources</code>，结构与 <code>links</code> 相同，可在 <code>note</code> 中注明页码、期号等。来源记录仅供维护，与页面展示的“网络资源”分开保存；公开仓库中的来源记录仍可见。</p>
     <h2>辅助资料文章</h2>
     <p>在 VS Code 打开网站项目，将 <code>templates/article.md</code> 复制到 <code>src/content/wiki/</code>，改名为英文小写文件名，例如 <code>my-first-entry.md</code>。文件名决定网址：<code>/wiki/my-first-entry/</code>。</p>
     <h3>修改顶部信息</h3>
     <p><code>title</code> 是标题，<code>description</code> 是不含剧透的简短介绍。<code>category</code> 必须为“作品”“人物”“术语”或“指南”；<code>series</code> 填所属作品，例如 <code>CHAOS;HEAD</code>。</p>
-    <p><code>updated</code> 使用 <code>YYYY-MM-DD</code> 日期。<code>draft: true</code> 的文章不会出现在网站上；准备好后改成 <code>false</code>。<code>spoiler: true</code> 会将正文折叠，但标题、简介、标签仍会公开，因此这些字段不要含剧透。</p>
+    <p><code>updated</code> 使用 <code>YYYY-MM-DD</code> 日期。<code>draft: true</code> 用于保存草稿；准备好后改成 <code>false</code> 发布。<code>spoiler: true</code> 会将正文折叠，标题、简介、标签始终公开，应保持无剧透。</p>
     <h3>编写正文</h3>
     <pre><code>{`## 简介\n\n在这里写正文。\n\n## 相关条目\n\n- [CHAOS;HEAD NOAH](/wiki/chaos-head-noah/)\n\n## 参考资料\n\n- [来源名称](https://example.com)`}</code></pre>
     <p>正文从二级标题 <code>##</code> 开始，一级标题由页面自动生成。辅助资料文章的二、三级标题会自动生成目录。</p>
-    <p>若需使用图片，将有权使用的图片放入 <code>public/images/</code>，在正文写 <code>![图片说明](/images/example.jpg)</code>。没有授权的游戏截图、画集扫描或其他网站图片不要直接上传。</p>
+    <p>若需使用图片，将有权使用的图片放入 <code>public/images/</code>，在正文写 <code>![图片说明](/images/example.jpg)</code>。</p>
     <h2>本地预览</h2>
     <p>在网站文件夹打开终端，运行 <code>npm run dev</code>，打开终端显示的网址。保存文章后刷新查看。草稿始终隐藏；如需预览，将 <code>draft</code> 临时改为 <code>false</code>，正式提交前再确认。</p>
     <h2>发布更新</h2>
     <p>首次上线需要创建 GitHub 仓库 <code>Syun1524.github.io</code>，并在仓库的 Settings → Pages 中选择 GitHub Actions。随后每次提交到 <code>main</code> 分支，自动部署流程就会运行。详细步骤见项目的 <code>README.md</code>。</p>
     <h2>内容与来源</h2>
-    <p>当前作品页只是栏目占位，衍生目录尚无真实记录。正式内容请自行撰写、核对事实、列出参考来源。角色介绍可简述并链接到现有百科；第三方文字需逐站核对许可、署名及其他条件，不可默认直接套用。剧透折叠只是阅读提示，不是权限保护，内容仍存在于公开页面源码中；公开仓库中的草稿源码也公开。</p>
+    <p>介绍请自行撰写、核对事实、列出参考来源。角色介绍可简述并链接到现有百科；使用第三方文字及图片时核对许可、署名及其他条件。剧透折叠用于阅读提示，正文及草稿源码在公开页面或仓库中仍可访问。</p>
   </article>
 </Base>

@@ -1,0 +1,19 @@
+[
+  {"id":"chaos-head","name":"CHAOS;HEAD","series":"chaos-head","kind":"主游戏","released":"2008-04-25","source":"https://sciadvseri.es/entries/chn/","resourceStatus":"","cover":""},
+  {"id":"chaos-head-noah","name":"CHAOS;HEAD NOAH","series":"chaos-head","kind":"其他","released":"2009-02-26","source":"https://sciadvseri.es/entries/chn/","resourceStatus":"","cover":""},
+  {"id":"steins-gate","name":"STEINS;GATE","series":"steins-gate","kind":"主游戏","released":"2009-10-15","source":"https://sciadvseri.es/entries/sg/","resourceStatus":"","cover":""},
+  {"id":"chaos-head-love-chu-chu","name":"CHAOS;HEAD らぶChu☆Chu!","series":"chaos-head","kind":"其他","released":"2010-03-25","source":"https://sciadvseri.es/entries/chlcc/","resourceStatus":"","cover":""},
+  {"id":"steins-gate-darling","name":"STEINS;GATE 比翼恋理のだーりん（比翼恋理的爱人）","series":"steins-gate","kind":"其他","released":"2011-06-16","source":"https://sciadvseri.es/entries/sgmde/","resourceStatus":"","cover":""},
+  {"id":"steins-gate-octet","name":"STEINS;GATE 変移空間のオクテット（变移空间的八重奏）","series":"steins-gate","kind":"其他","released":"2011-10-28","source":"https://sciadvseri.es/entries/sgoss/","resourceStatus":"","cover":""},
+  {"id":"robotics-notes","name":"ROBOTICS;NOTES","series":"robotics-notes","kind":"主游戏","released":"2012-06-28","source":"https://sciadvseri.es/entries/rne/","resourceStatus":"","cover":""},
+  {"id":"steins-gate-phenogram","name":"STEINS;GATE 線形拘束のフェノグラム（线形拘束的表征图）","series":"steins-gate","kind":"其他","released":"2013-04-25","source":"https://sciadvseri.es/entries/sglbp/","resourceStatus":"","cover":""},
+  {"id":"robotics-notes-elite","name":"ROBOTICS;NOTES ELITE","series":"robotics-notes","kind":"其他","released":"2014-06-26","source":"https://sciadvseri.es/entries/rne/","resourceStatus":"","cover":""},
+  {"id":"chaos-child","name":"CHAOS;CHILD","series":"chaos-child","kind":"主游戏","released":"2014-12-18","source":"https://sciadvseri.es/entries/cc/","resourceStatus":"","cover":""},
+  {"id":"steins-gate-0","name":"STEINS;GATE 0","series":"steins-gate","kind":"其他","released":"2015-12-10","source":"https://sciadvseri.es/entries/sg0/","resourceStatus":"","cover":""},
+  {"id":"chaos-child-love-chu-chu","name":"CHAOS;CHILD らぶChu☆Chu!!","series":"chaos-child","kind":"其他","released":"2017-03-30","source":"https://sciadvseri.es/entries/cclcc/","resourceStatus":"","cover":""},
+  {"id":"occultic-nine","name":"OCCULTIC;NINE","series":"occultic-nine","kind":"主游戏","released":"2017-11-09","source":"https://occultic9.jp/","resourceStatus":"","cover":""},
+  {"id":"steins-gate-elite","name":"STEINS;GATE ELITE","series":"steins-gate","kind":"其他","released":"2018-09-20","source":"https://steinsgate.jp/elite/","resourceStatus":"","cover":""},
+  {"id":"robotics-notes-dash","name":"ROBOTICS;NOTES DaSH","series":"robotics-notes","kind":"其他","released":"2019-01-31","source":"https://sciadvseri.es/entries/rnd/","resourceStatus":"","cover":""},
+  {"id":"anonymous-code","name":"ANONYMOUS;CODE","series":"anonymous-code","kind":"主游戏","released":"2022-07-28","source":"https://sciadvseri.es/entries/ac/","resourceStatus":"","cover":""},
+  {"id":"steins-gate-reboot","name":"STEINS;GATE RE:BOOT","series":"steins-gate","kind":"其他","released":"2026-08-20","source":"https://steinsgate.jp/reboot/ja-jp/","resourceStatus":"","cover":""}
+]

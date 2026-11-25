@@ -1,6 +1,8 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 
-export const sideContentTypes = ['广播剧', '小说', '短篇', '漫画', '动画', '舞台剧', '设定集', '访谈', '资料书', '原声带', '歌曲', '广播节目', '其他'] as const;
+export const sideContentTypes = ['广播剧', '小说', '漫画', '动画', '舞台剧', '公式书'] as const;
+export const gameKinds = ['主游戏', '其他'] as const;
+export const resourceStatuses = ['有汉化', '有原版', '暂无资源'] as const;
 export const linkKinds = ['官方信息', '购买', '补丁', '攻略', '授权阅读/收听', '译者发布', '其他'] as const;
 
 export async function publishedSideContent(): Promise<CollectionEntry<'sideContent'>[]> {

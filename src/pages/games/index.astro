@@ -1,0 +1,25 @@
+---
+import Base from '../../layouts/Base.astro';
+import EntryCover from '../../components/EntryCover.astro';
+import { gameKinds, resourceStatuses } from '../../lib/catalog';
+import { mainWorks, publishedGames, workUrl } from '../../lib/works';
+const works = await mainWorks();
+const games = await publishedGames();
+---
+<Base title="游戏发行列表">
+  <header class="page-heading"><h1>游戏发行列表</h1><p>按最初发售日期排列主游戏与其他游戏，当前收录 {games.length} 项。</p><p><a href="/works/">六个主作品</a> · <a href="/side-content/">衍生内容目录</a></p></header>
+  <div id="filters" class="filters" hidden><label class="search-label">搜索游戏<input id="search" type="search" placeholder="输入游戏名称" /></label><label>所属作品<select id="series"><option value="">全部作品</option>{works.map(work => <option>{work.data.name}</option>)}</select></label><label>游戏分类<select id="type"><option value="">全部分类</option>{gameKinds.map(kind => <option>{kind}</option>)}</select></label><label>资源情况<select id="resourceStatus"><option value="">全部资源情况</option>{resourceStatuses.map(status => <option>{status}</option>)}</select></label></div>
+  <noscript><p class="notice">下方仍按首发日期展示全部公开游戏；搜索及筛选需要 JavaScript。</p></noscript>
+  <p id="results-count" class="muted" aria-live="polite">共 {games.length} 个条目</p>
+  <div class="entry-grid">{games.map(game => {
+    const work = works.find(work => work.id === game.data.series.id);
+    if (!work) throw new Error(`找不到游戏 ${game.id} 的所属主作品`);
+    return <article id={game.id} class="entry-card entry-with-cover" data-entry data-kind={game.data.kind} data-resource-status={game.data.resourceStatus} data-series-list={JSON.stringify([work.data.name])} data-search={[game.data.name, work.data.name, work.data.title].join(' ').toLocaleLowerCase('zh-CN')}><EntryCover cover={game.data.cover} title={game.data.name} /><div class="entry-content"><h3><a href={workUrl(game.id)}>{game.data.name}</a></h3>{game.data.resourceStatus && <p>资源情况：<span class="tag">{game.data.resourceStatus}</span></p>}<p class="entry-meta"><time datetime={game.data.released}>{game.data.released}</time> · {game.data.kind} · <a href={workUrl(work.id)}>{work.data.title}</a></p></div></article>;
+  })}</div>
+  <p id="empty-state" class="notice" hidden>没有匹配的游戏。请调整筛选条件。</p>
+  <p class="muted">录入方式见 <a href="/contribute/">编写指南</a>。</p>
+  <script>
+    import { initEntryFilters } from '../../scripts/filters';
+    initEntryFilters('type', true);
+  </script>
+</Base>

@@ -1,0 +1,5 @@
+---
+interface Props { cover: string; title: string }
+const { cover, title } = Astro.props;
+---
+<div class="entry-cover" aria-hidden={cover ? undefined : 'true'}>{cover && <img src={cover} alt={`${title}封面`} loading="lazy" decoding="async" />}</div>

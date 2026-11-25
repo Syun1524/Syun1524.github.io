@@ -1,11 +1,11 @@
 ---
 import Base from '../../layouts/Base.astro';
-import { publishedWorks, workUrl } from '../../lib/works';
+import { mainWorks, workUrl } from '../../lib/works';
 import { sideContentSeriesUrl } from '../../lib/catalog';
-const works = await publishedWorks();
+const works = await mainWorks();
 ---
 <Base title="作品导航">
-  <header class="page-heading"><h1>作品导航</h1><p>每部作品的页面预留简介、版本与获取渠道，并连接到对应衍生目录。尚未填写的栏目会显示待补充；目录不代表完整游戏、版本或阅读顺序清单。</p></header>
+  <header class="page-heading"><h1>作品导航</h1><p>六个主作品入口。STEINS;GATE 0 与 ROBOTICS;NOTES DaSH 分别归属 STEINS;GATE 与 ROBOTICS;NOTES。</p><p>查看 <a href="/games/">游戏发行列表</a>，按首发日期浏览主游戏、衍生游戏与加强版；广播剧、小说、漫画、动画、公式书等另见 <a href="/side-content/">衍生目录</a>。</p></header>
   <div id="filters" class="filters" hidden><label class="search-label">搜索作品<input id="search" type="search" placeholder="输入中文或英文名称" /></label><label>作品<select id="series"><option value="">全部作品</option>{works.map(work => <option>{work.data.name}</option>)}</select></label></div>
   <noscript><p class="notice">下方仍可浏览所有公开作品栏目；搜索及筛选需要 JavaScript。</p></noscript>
   <p id="results-count" class="muted" aria-live="polite">共 {works.length} 个条目</p>

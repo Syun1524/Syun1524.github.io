@@ -1,0 +1,39 @@
+---
+title: "世界線 0.00000000"
+originalTitle: "世界線 0.00000000"
+description: "介绍待补充；暂以日文原名收录。"
+series: ["STEINS;GATE"]
+type: "漫画"
+resourceStatus: ""
+cover: ""
+authors: ["水田 ケンジ"]
+released: "2011-10-08"
+prerequisites: []
+chineseStatus: "待核实"
+links: []
+sources:
+  - label: "N.R.W. 衍生内容目录"
+    url: "https://nrw.nobody.jp/sa/comic-sg.html"
+    kind: "其他"
+    note: "非官方目录来源；发行日期据保存页面录入，尚待独立核实。"
+tags: ["世界線 0.00000000","Special Booklet","Steins;Gate 亡環のリベリオン ③（限定版）"]
+updated: "2026-11-25"
+spoiler: false
+draft: false
+---
+
+## 条目信息
+
+- 收录载体：Steins;Gate 亡環のリベリオン ③（限定版）
+
+- 载体内的收录位置：Special Booklet
+
+- 来源列示的发行编号：ISBN978\-4\-8612\-7899\-0
+
+### 收录名称
+
+- 世界線 0\.00000000
+
+## 内容介绍
+
+待补充。

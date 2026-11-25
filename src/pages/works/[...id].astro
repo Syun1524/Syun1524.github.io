@@ -1,8 +1,8 @@
 ---
-import { render, type CollectionEntry } from 'astro:content';
+import { getEntry, render, type CollectionEntry } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import ResourceLinks from '../../components/ResourceLinks.astro';
-import { publishedWorks } from '../../lib/works';
+import { publishedWorks, workUrl } from '../../lib/works';
 import { publishedSideContent, sideContentSeriesUrl, sideContentUrl } from '../../lib/catalog';
 export async function getStaticPaths() {
   return (await publishedWorks()).map(entry => ({ params: { id: entry.id }, props: { entry } }));
@@ -10,14 +10,20 @@ export async function getStaticPaths() {
 interface Props { entry: CollectionEntry<'works'> }
 const { entry } = Astro.props;
 const { Content } = await render(entry);
+const parent = entry.data.parent ? await getEntry(entry.data.parent) : undefined;
+if (entry.data.parent && (!parent || parent.data.draft || parent.data.parent)) {
+  throw new Error(`作品 ${entry.id} 的 parent 必须指向已公开的主作品`);
+}
+const series = parent?.data.name ?? entry.data.name;
 const related = (await publishedSideContent()).filter(item => item.data.series.includes(entry.data.name));
 ---
 <Base title={entry.data.name} description={entry.data.description}>
-  <div class="breadcrumb"><a href="/works/">作品导航</a><span>/</span><span>{entry.data.title}</span></div>
+  <div class="breadcrumb"><a href="/works/">作品导航</a><span>/</span>{parent && <><a href={workUrl(parent.id)}>{parent.data.title}</a><span>/</span></>}<span>{entry.data.title}</span></div>
   <header class="article-heading"><h1>{entry.data.name}</h1><p>{entry.data.title}</p><p class="page-origin">来自科学ADV中文资料站 · 更新于 {entry.data.updated}</p><p>{entry.data.description}</p></header>
   <div class="catalog-jump"><a href="#introduction">作品介绍</a> · <a href="#get">获取方式</a> · <a href="#side-content">衍生内容</a></div>
+  <p><a href={`/games/?series=${encodeURIComponent(series)}`}>在游戏发行列表查看本系列的主游戏、衍生游戏与加强版</a>{parent && <> · 本游戏归属 <a href={workUrl(parent.id)}>{parent.data.name}</a>。</>}</p>
   <section id="introduction" class="prose"><Content /></section>
-  <section id="get" class="wiki-section"><h2>游戏与作品获取方式</h2><dl class="catalog-meta"><dt>平台</dt><dd>{entry.data.platforms.length ? entry.data.platforms.join('、') : '待补充'}</dd><dt>语言</dt><dd>{entry.data.languages.length ? entry.data.languages.join('、') : '待补充'}</dd></dl><ResourceLinks links={entry.data.links} emptyText="尚未核实或录入获取渠道。后续可填写官网、正规商店、适用补丁及攻略链接；当前不提供下载。" /></section>
-  <section id="side-content" class="wiki-section"><h2>衍生内容（{related.length}）</h2><p><a href={sideContentSeriesUrl(entry.data.name)}>查看本作品的完整衍生目录与类型筛选</a></p>{related.length ? <ul>{related.map(item => <li><a href={sideContentUrl(item.id)}>{item.data.title}</a> <span class="muted">{item.data.type} · {item.data.chineseStatus}</span></li>)}</ul> : <p class="notice">尚未录入该作品的真实衍生内容。小说、广播剧、漫画、资料及音乐等记录将汇总在这里。</p>}</section>
+  <section id="get" class="wiki-section"><h2>游戏与作品获取方式</h2><dl class="catalog-meta"><dt>平台</dt><dd>{entry.data.platforms.length ? entry.data.platforms.join('、') : '待补充'}</dd><dt>语言</dt><dd>{entry.data.languages.length ? entry.data.languages.join('、') : '待补充'}</dd></dl><ResourceLinks links={entry.data.links} emptyText="网络资源待补充。" /></section>
+  <section id="side-content" class="wiki-section"><h2>衍生内容（{related.length}）</h2><p><a href={sideContentSeriesUrl(entry.data.name)}>查看本作品的完整衍生目录与类型筛选</a></p>{related.length ? <ul>{related.map(item => <li><a href={sideContentUrl(item.id)}>{item.data.title}</a> <span class="muted">{item.data.type}{item.data.chineseStatus !== '待核实' && <> · {item.data.chineseStatus}</>}</span></li>)}</ul> : <p class="notice">衍生内容待补充。</p>}</section>
   <p class="muted">可在 <a href="/contribute/">录入指南</a> 查看此页及衍生目录的维护方式。</p>
 </Base>

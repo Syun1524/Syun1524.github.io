@@ -3,6 +3,8 @@ title: "衍生目录草稿示例"
 description: "仅用于演示录入结构，不是真实发行作品。"
 series: ["CHAOS;HEAD"]
 type: "广播剧"
+resourceStatus: ""
+cover: ""
 prerequisites: []
 chineseStatus: "待核实"
 links: []

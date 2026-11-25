@@ -1,11 +1,12 @@
 ---
 import '../styles/global.css';
-import { publishedWorks, workUrl } from '../lib/works';
+import { mainWorks, workUrl } from '../lib/works';
+import { sideContentTypes } from '../lib/catalog';
 interface Props { title: string; description?: string }
-const { title, description = '科学ADV中文资料站：系列作品简介、游戏获取渠道，以及剧情、资料与音乐衍生内容目录。' } = Astro.props;
+const { title, description = '科学ADV中文资料站：系列作品简介、游戏获取渠道，以及非游戏衍生内容目录。' } = Astro.props;
 const path = Astro.url.pathname;
-const works = await publishedWorks();
-const links = [ ['/', '首页'], ['/works/', '作品导航'], ['/side-content/', '衍生目录'], ['/contribute/', '编写指南'] ];
+const works = await mainWorks();
+const links = [ ['/', '首页'], ['/works/', '作品导航'], ['/games/', '游戏发行列表'], ['/side-content/', '衍生目录'], ['/contribute/', '编写指南'] ];
 const searchArticles = path.startsWith('/wiki/');
 const searchLabel = searchArticles ? '搜索资料文章' : '搜索衍生内容';
 ---
@@ -26,17 +27,17 @@ const searchLabel = searchArticles ? '搜索资料文章' : '搜索衍生内容'
       <aside class="wiki-sidebar">
         <a class="brand" href="/" aria-label="科学ADV中文资料站首页"><span class="brand-name">科学<span>ADV</span></span><span class="brand-sub">中文资料站</span></a>
         <nav class="sidebar-section primary-navigation" aria-label="主导航"><h2>导航</h2><ul>{links.map(([href, label]) => <li><a href={href} aria-current={(href === '/' ? path === '/' : path.startsWith(href)) ? 'page' : undefined}>{label}</a></li>)}<li class="desktop-link"><a href="/#recent">最近更新</a></li><li class="desktop-link"><a href="/wiki/reading-guide/">阅读指南</a></li></ul></nav>
-        <nav class="sidebar-section desktop-section" aria-label="衍生分类"><h2>衍生分类</h2><ul>{['广播剧', '小说', '漫画', '动画', '资料书', '原声带'].map(type => <li><a href={`/side-content/?type=${encodeURIComponent(type)}`}>{type}</a></li>)}</ul></nav>
+        <nav class="sidebar-section desktop-section" aria-label="衍生分类"><h2>衍生分类</h2><ul>{sideContentTypes.map(type => <li><a href={`/side-content/?type=${encodeURIComponent(type)}`}>{type}</a></li>)}</ul></nav>
         <nav class="sidebar-section desktop-section" aria-label="系列作品"><h2>系列作品</h2><ul>{works.map(work => <li><a href={workUrl(work.id)} aria-current={path === workUrl(work.id) ? 'page' : undefined}>{work.data.title}<small>{work.data.name}</small></a></li>)}</ul></nav>
         <nav class="sidebar-section desktop-section" aria-label="本站资料"><h2>本站资料</h2><ul><li><a href="/wiki/">资料文章</a></li><li><a href="/contribute/">编辑教程</a></li><li><a href="/#about">关于本站</a></li></ul></nav>
       </aside>
       <div class="wiki-main">
         <header class="wiki-tools">
-          <nav class="page-tabs" aria-label="页面导航"><a href="/works/">作品导航</a><a href="/side-content/">衍生目录</a><span class="selected-tab">阅读</span></nav>
+          <nav class="page-tabs" aria-label="页面导航"><a href="/works/">作品导航</a><a href="/games/">游戏发行列表</a><a href="/side-content/">衍生目录</a><span class="selected-tab">阅读</span></nav>
           <form class="site-search" action={searchArticles ? '/wiki/' : '/side-content/'} method="get" role="search"><label class="sr-only" for="site-search">{searchLabel}</label><input id="site-search" name="q" type="search" placeholder={searchLabel} /><button type="submit">搜索</button></form>
         </header>
         <main id="main" class="wiki-content"><slot /></main>
-        <footer class="site-footer"><p>科学ADV中文资料站是非官方资料站，与作品权利方无隶属关系。作品名称及相关商标归各自权利方所有。</p><p><a href="/contribute/">编写指南</a> · <a href="/#about">关于本站</a> · 本站以 Astro 生成静态页面，不提供 MediaWiki 在线编辑功能。</p></footer>
+        <footer class="site-footer"><p>作品名称及相关商标归各自权利方所有。</p><p><a href="/contribute/">编写指南</a> · <a href="/#about">关于本站</a></p></footer>
       </div>
     </div>
   </body>
